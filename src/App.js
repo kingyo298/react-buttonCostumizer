@@ -17,7 +17,7 @@ const Button = (props) => {
 
   return (
     <button
-      disabled={props.disabled}
+      disabled={props.isDisabled}
       style={style}
     >{props.text}</button>
   );
@@ -73,7 +73,7 @@ const Disable = (props) => {
   return (
     <div>
       <label>disabled属性</label>
-      <input name="disabled" type="checkbox" disabled={props.value} onClick={props.onChange}/>
+      <input name="isDisabled" type="checkbox" value={props.value} onChange={props.onChange}/>
     </div>
   );
 }
@@ -82,7 +82,7 @@ const Text = (props) => {
   return (
     <div>
       <label>buttonに表示するテキスト</label>
-      <input type="text" value={props.value} onChange={props.onChange}/>
+      <input name="text" type="text" value={props.value} onChange={props.onChange}/>
     </div>
   );
 }
@@ -94,12 +94,20 @@ function App() {
     opacity:"1",
     borderRadius:"5",
     fontSize: "16",
-    disabled: false,
-    text: "buttonCustomizer",
+    isDisabled: false,
+    text: "ButtonCustomizer",
   });
 
   const styleChangeHandler = (event) => {
-    setEnteredStyle(event.target.value);
+    const target = event.target;
+    const name = target.name;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const newStyle = {
+      ...enteredStyle,
+      [name]: value
+    // key, valueはeventから取得するといいです。
+    }
+    setEnteredStyle(newStyle);
   }
 
   return(
@@ -110,9 +118,9 @@ function App() {
         opacity={enteredStyle.opacity}
         borderRadius={enteredStyle.borderRadius}
         fontSize={enteredStyle.fontSize}
-        disabled={enteredStyle.disabled}
+        isDisabled={enteredStyle.isDisabled}
         text={enteredStyle.text}
-        />
+      />
       <Color
         value={enteredStyle.color}
         onChange={styleChangeHandler}/>
@@ -129,7 +137,7 @@ function App() {
         value={enteredStyle.opacity}
         onChange={styleChangeHandler}/>
       <Disable
-        value={enteredStyle.disabled}
+        value={enteredStyle.isDisabled}
         onChange={styleChangeHandler}/>
       <Text
         value={enteredStyle.text}
